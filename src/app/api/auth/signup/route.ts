@@ -25,8 +25,11 @@ export async function POST(request: Request) {
 
     const userSeved = await user.save();
 
-    return NextResponse.json({ message: "singup" });
+    return NextResponse.json({ email: userSeved.email, fullname: userSeved.fullname });
   } catch (error) {
     console.log(error);
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 400 });
+    }
   }
 }
