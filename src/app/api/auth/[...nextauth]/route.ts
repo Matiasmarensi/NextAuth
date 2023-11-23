@@ -2,7 +2,7 @@ import nextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { conectDB } from "@/libs/mogodb";
 import User from "@/models/users";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 const handler = nextAuth({
   providers: [
@@ -14,10 +14,15 @@ const handler = nextAuth({
       },
       async authorize(credentials, req) {
         await conectDB();
-        console.log("credential", credentials);
-        const userFound = await User.findOne({ email: credentials?.email });
 
-        console.log("user", userFound);
+        const userFound = await User.findOne({ email: credentials?.email }).select("+password");
+        console.log("userrrr", userFound);
+
+        if (!userFound) throw new Error("invalid credentials");
+        const isValidPassword = await bcrypt.compare(credentials!.password, userFound.password);
+        console.log(isValidPassword);
+        if (!isValidPassword) throw new Error("invalid credentials ");
+        if (!isValidPassword) throw new Error("invalid credentials");
 
         return userFound;
       },
@@ -25,16 +30,18 @@ const handler = nextAuth({
   ],
   callbacks: {
     jwt({ account, token, user, profile, session }) {
-      token.hello = "HOLAAAAAA";
+      if (user) token.user = user;
+
       return token;
     },
     session({ session, token }) {
       session.user = token.user as any;
 
-      console.log({ session, token });
-
       return session;
     },
+  },
+  pages: {
+    signIn: "/login",
   },
 });
 
