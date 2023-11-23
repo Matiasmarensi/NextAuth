@@ -16,13 +16,13 @@ export default function Register() {
       const password = formData.get("password");
       const fullname = formData.get("fullname");
       const res = await axios.post("./api/auth/signup/", { email, password, fullname });
-      console.log(res);
+
       signIn("credentials", {
         email: res.data.email,
         password: formData.get("password"),
         redirect: false,
       });
-      if (res.status === 200) return router.push("./dashboard");
+      if (res.status === 200) return router.push("./dashboard/profile");
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.response?.data.message);

@@ -16,11 +16,10 @@ const handler = nextAuth({
         await conectDB();
 
         const userFound = await User.findOne({ email: credentials?.email }).select("+password");
-        console.log("userrrr", userFound);
 
         if (!userFound) throw new Error("invalid credentials");
         const isValidPassword = await bcrypt.compare(credentials!.password, userFound.password);
-        console.log(isValidPassword);
+
         if (!isValidPassword) throw new Error("invalid credentials ");
         if (!isValidPassword) throw new Error("invalid credentials");
 
