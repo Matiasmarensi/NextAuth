@@ -8,12 +8,13 @@ export default function ProfilePage() {
   return (
     <div>
       <h1>Profile</h1>
-      <pre>
+      <div>
         {JSON.stringify({
           session,
+
           status,
         })}
-      </pre>
+      </div>
     </div>
   );
 }
