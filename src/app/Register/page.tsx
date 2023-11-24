@@ -22,7 +22,7 @@ export default function Register() {
         password: formData.get("password"),
         redirect: false,
       });
-      if (res.status === 200) return router.push("./dashboard/profile");
+      if (res.status === 200) router.push("./");
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.response?.data.message);
